@@ -143,6 +143,14 @@ const matrix = [
   [1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48]
 ];
 
+const testMatrix = [
+  [1,1,1,1,1],
+  [1,2,1,1,1],
+  [1,1,2,1,1],
+  [1,1,1,2,1],
+  [1,1,1,1,2]
+];
+
 function greatestProduct(matrix, n) {
 
   // Default value
@@ -162,12 +170,31 @@ function greatestProduct(matrix, n) {
         return;
       }
 
-      // Multiply by element by n * next elements
+      // Multiply element by n * next elements
       let newTotal = element;
       for (let t = 1; t < n; t++) {
         newTotal = newTotal * row[e + t];
       }
       if (newTotal > total) { total = newTotal; }
+
+      // Right diagonals
+      let rightDiagsTotal = 0;
+      let rightDiagValues = [element];
+
+      // Diagonals - loop n - 1 times
+      for (let d = 1; d <= n - 1; d++) {
+        let nextDiagonalEl = matrix[r+d] ? matrix[r+d][e+d] : null;
+        if (nextDiagonalEl !== null) {
+          rightDiagValues.push(nextDiagonalEl);
+        }
+      }
+
+      if ( rightDiagValues.length == n) {
+        let rightDiagsTotal = rightDiagValues.reduce((sum, el) => { return sum * el });
+        if (rightDiagsTotal > total) { total = rightDiagsTotal; }
+      }
+
+      // TODO left diagonals !
 
     });
   });
@@ -196,7 +223,7 @@ function greatestProduct(matrix, n) {
 
   }
 
-  // TODO diagonals !
-
   return total;
 }
+
+console.log(greatestProduct(matrix, 4));
